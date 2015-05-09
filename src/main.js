@@ -74,11 +74,40 @@ Board.prototype.structureAt = function(target){
             }    
         }else if(target instanceof Edge){
             if(structure.getPlacement() == GPM.EDGE && structure.location.equals(target)){
-                return true;
+                return false;
             } 
         }
     }
     return false;
+}
+
+
+Board.prototype.getStructureAt = function(target){
+    var ts = tiles[target[0]].structures;
+    for(index in ts){
+        var structure = this.structures[ts[index]];
+        if(target instanceof Vertex){
+            if(structure.getPlacement() == GPM.VERTEX && structure.location.equals(target)){
+                return structure.index;
+            }    
+        }else if(target instanceof Edge){
+            if(structure.getPlacement() == GPM.EDGE && structure.location.equals(target)){
+                return structure.index;
+            } 
+        }
+    }
+    return -1;
+}
+
+Board.prototype.addStructure = function(type, location, player){
+	if(!this.structureAt(location)){
+		this.structures.push(new Structure(type, location, this.structures.length, player));
+		return this.structures.length -1;
+	}else{
+		var index = this.getStructureAt(location);
+		this.structures[] = new Structure(type, location, this.structures.length, player);
+		return index;
+	}
 }
 
 function Tile(number, type, location, index){
@@ -107,7 +136,7 @@ function Structure(type, location, index, player){
     this.placement = gpm.GSI[this.type].placement;
 
     this.location = location; //Vertex or Edge
-    this.index = index; //GPM.EDGE of GPM.VERTEX
+    this.index = index;
 
     this.player = player;
 
@@ -296,8 +325,11 @@ GPM.prototype.roll(){
     }
 }
 
-GPM.prototype.build(player,location, placement){
-    //todo
+GPM.prototype.build(player, type, location){	
+	if(playerCanBuild(player, type, location)){
+		structure = this.board.addStructure(type, location, player);
+		this.players[player].build(this.GSI[type].crafting, structure);
+	}
 }
 
 function GR(name,index, rarity){
