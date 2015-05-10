@@ -73,7 +73,6 @@ Display.prototype.renderMap = function(){
     }
 }
 
-Display.prototype.render = function(){//TODO get this working
 	requestAnimationFrame( this.render );
     this.controls.controls.update();
     this.renderer.render( this.scene, this.controls.camera );

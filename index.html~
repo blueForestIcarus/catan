@@ -13,7 +13,7 @@
     </head>
 
     <body>
-
+        <canvas width="1000px" height="1000px">sorry, your browser does not support canvas</canvas>
     </body>
 
     <script>
